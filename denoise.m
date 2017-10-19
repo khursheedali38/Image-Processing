@@ -1,5 +1,5 @@
 %reading input image
-I = imread('brain_skull.jpg');
+I = imread('noisy.PNG');
 
 %rgb to grayscale
 I = rgb2gray(I); 
@@ -8,9 +8,10 @@ I = im2double(I);
 %reszing image to 255 x 255
 I = imresize(I, [217 217]);
 
-%adding uniformly distributed random noise to image 
-J = imnoise(I, 'salt & pepper', 0.01) ;
-J = padarray(J, [4 4])
+% %adding uniformly distributed random noise to image 
+% J = imnoise(I, 'salt & pepper', 0.01) ;
+J = I
+
 % %selecting subimages of size 5x5 and calcualting R1, R2, R3 segments
 % for i = 1:2:217
 %     for j = 1:2:217
@@ -48,13 +49,14 @@ processedimage = imresize(processedimage, [225 225]) ;
 
 %displaying the final image
 imshow(processedimage) ;
-I1 = imresize(conv2(J, ones(3) ./9), [225 225]) ;
-I2 = imresize(conv2(J, [1 2 1; 2 4 2; 1 2 1] ./16), [225 225]) ;
-imtool([processedimage I1 I2]) ;
+I1 = imresize(conv2(J, [1 2 1; 2 4 2; 1 2 1] ./16), [225 225]) ;
+I2 = imresize(medfilt2(J), [225 225]) ;
+J = imresize(J, [225 225]) ;
+imtool([J I1 I2 processedimage]) ;
 
-p1 = psnr(processedimage, J) ;
-p2 = psnr(I1, J) ;
-p3 = psnr(I2, J) ;
+p1 = psnr(I1, J) ;
+p2 = psnr(I2, J) ;
+p3 = psnr(processedimage, J) ;
 
     
             
