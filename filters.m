@@ -17,8 +17,14 @@ end
 if sum < 5
     singlevalue(1:5, 1:5) = mean(block_struct.data(:)) ;
 elseif sum == 5
-    singlevalue(1:5, 1:5) = median(block_struct.data(:)) ; %change to mean closest five pixels
+        diff = block_struct.data() ;
+        diff = abs(diff - diff(3, 3)) ;  
+        [sortedValues, sortIndex] = sort(diff(:)) ;
+        min5index = sortIndex(1:5) ;
+        [I, J] = ind2sub([5 5], min5index) ;
+        meanVal = (block_struct.data(I(1), J(1)) + block_struct.data(I(2), J(2)) + block_struct.data(I(3), J(3)) + block_struct.data(I(4), J(4)) + block_struct.data(I(5), J(5)) ) ./ 5 ;
+        singlevalue(1:5, 1:5) = meanVal ;
 else
-    singlevalue(1:5, 1:5) = block_struct.data(1:5, 1:5) ;
+    singlevalue(1:5, 1:5) = block_struct.data() ;
 end
 end
