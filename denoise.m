@@ -1,62 +1,60 @@
 %reading input image
-I = imread('noisy.PNG');
+I = imread('brain_skull.jpg');
 
 %rgb to grayscale
 I = rgb2gray(I); 
 I = im2double(I);
 
-%reszing image to 255 x 255
-I = imresize(I, [217 217]);
-
 % %adding uniformly distributed random noise to image 
-% J = imnoise(I, 'salt & pepper', 0.01) ;
+ I = imnoise(I, 'salt & pepper', 0.01) ;
+ I = imresize(I, [230 217]) ;
 J = I
 
-% %selecting subimages of size 5x5 and calcualting R1, R2, R3 segments
-% for i = 1:2:217
-%     for j = 1:2:217
-%         B = J3( (i : i + 4), (j : j + 4) )
-%         sum = 0 ;
-%         for k = 1:5
-%             for l = 1:5
-%                 if (k ==3)&&(l==3)
-%                     ratio = 0;
-%                 else 
-%                     ratio = B(3, 3) / B(k, l);
-%                 end
-%                 if (ratio >=0.9 ) && (ratio <=1.1 )
-%                     sum = sum + ratio ;
-%                 end
-%             end
-%         end
+%selecting subimages of size 5x5 and calcualting R1, R2, R3 segments
+for i = 1:3:226
+    for j= 1:3:213
+        B = I( (i : i + 4), (j : j + 4) )
+        sum = 0 ;
+        for k = 1:5
+            for l = 1:5
+                if (k ==3)&&(l==3)
+                    ratio = 0;
+                else 
+                    ratio = B(3, 3) / B(k, l);
+                end
+                if (ratio >=0.9 ) && (ratio <=1.1 )
+                    sum = sum + ratio ;
+                end
+            end
+        end
+
+        if sum < 5
+            %noisy sub-image
+            J( (i : i + 4), (j : j + 4) ) = mean(B(:)) ;
+            imshow(J) ;
+        elseif sum == 5
+            %edge sub-image
+            diff = B ;
+            diff = abs(diff - diff(3, 3)) ;  
+            [sortedValues, sortIndex] = sort(diff(:)) ;
+            min5index = sortIndex(1:5) ;
+            [I, J] = ind2sub([5 5], min5index) ;
+            meanVal = (B(I(1), J(1)) + B(I(2), J(2)) + B(I(3), J(3)) + B(I(4), J(4)) + B(I(5), J(5)) ) ./ 5 ;
+            J( (i : i + 4), (j : j + 4) ) = meanVal ;
+            imshow(J) 
+        else J( (i : i + 4), (j : j + 4) ) = B(1:5, 1:5) ;
+        end
+    end
+end
 % 
-%         if sum < 5
-%             %noisy sub-image
-%             J4( (i : i + 4), (j : j + 4) ) = mean(B(:)) ;
-%             imshow(J4) ;
-%         elseif sum == 5
-%             %edge sub-image
-%             J4( (i : i + 4), (j : j + 4) ) = median(B(:)) ;
-%             imshow(J4) 
-%         else J4( (i : i + 4), (j : j + 4) ) = B(1:5, 1:5) ;
-%         end
-%     end
-% end
 
-myfilter = @filters ;
-processedimage = blockproc(J, [1 1], myfilter, 'BorderSize', [2 2], 'TrimBorder', false);
-processedimage = imresize(processedimage, [225 225]) ;
+I1 = conv2(I, [1 2 1; 2 4 2; 1 2 1] ./16, 'same') ;
+I2 = medfilt2(I) ;
 
-%displaying the final image
-imshow(processedimage) ;
-I1 = imresize(conv2(J, [1 2 1; 2 4 2; 1 2 1] ./16), [225 225]) ;
-I2 = imresize(medfilt2(J), [225 225]) ;
-J = imresize(J, [225 225]) ;
-imtool([J I1 I2 processedimage]) ;
 
-p1 = psnr(I1, J) ;
-p2 = psnr(I2, J) ;
-p3 = psnr(processedimage, J) ;
+p1 = psnr(I1, I) ;
+p2 = psnr(I2, I) ;
+p3 = psnr(J, I) ;
 
     
             
