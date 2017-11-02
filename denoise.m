@@ -1,19 +1,20 @@
 %reading input image
-I = imread('noisy.png');
+I = imread('brain_skull.jpg');
 
 %rgb to grayscale
 I = rgb2gray(I); 
 I = im2double(I);
 
 % %adding uniformly distributed random noise to image 
-%  I = imnoise(I, 'salt & pepper', 0.01) ;
- I = imresize(I, [230 217]) ;
-J = I
+I = imresize(I, [230 217]) ;
+K = I ;
+I = imnoise(I, 'salt & pepper', 0.01) ;
+J = I ;
 
 %selecting subimages of size 5x5 and calcualting R1, R2, R3 segments
 for i = 1:1:226
     for j= 1:1:213
-        B = I( (i : i + 4), (j : j + 4) )
+        B = I( (i : i + 4), (j : j + 4) ) ;
         sum = 0 ;
         for k = 1:5
             for l = 1:5
@@ -28,10 +29,9 @@ for i = 1:1:226
             end
         end
 
-        if sum < 5
+        if sum < 5 
             %noisy sub-image
             J( i + 2, j + 2 ) = mean(B(:)) ;
-            imshow(J) ;
         elseif sum == 5
             %edge sub-image
             diff = B ;
@@ -41,8 +41,10 @@ for i = 1:1:226
             [I, J] = ind2sub([5 5], min5index) ;
             meanVal = (B(I(1), J(1)) + B(I(2), J(2)) + B(I(3), J(3)) + B(I(4), J(4)) + B(I(5), J(5)) ) ./ 5 ;
             J( i+2, j + 2 ) = meanVal ;
-            imshow(J) 
-        else J( i + 2, j  + 2 ) = B(3, 3) ;
+ 
+        else
+            %smooth region
+            J( i + 2, j  + 2 ) = B(3, 3) ;
         end
     end
 end
@@ -52,10 +54,10 @@ end
 I1 = conv2(I, [1 2 1; 2 4 2; 1 2 1] ./16, 'same') ;
 I2 = medfilt2(I) ;
 
-
-p1 = psnr(I1, I) ;
-p2 = psnr(I2, I) ;
-p3 = psnr(J, I) ;
+%check psnr using referenve image which doesnt have noise
+p1 = psnr(I1, K) ;
+p2 = psnr(I2, K) ;
+p3 = psnr(J, K) ;
 
     
             
