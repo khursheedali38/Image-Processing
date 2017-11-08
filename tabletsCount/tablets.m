@@ -42,7 +42,7 @@ se = strel('disk', 9) ;
 BW5 = imerode(BW4, se) ;
 imtool(BW5, []) ;
 
-%get the centre pixel value
+%get the centre pixel value using erosion
 for i = 1:size(BW5, 1) 
     for j = 1:size(BW5, 2)
         if BW5(i, j) == 1
@@ -51,6 +51,9 @@ for i = 1:size(BW5, 1)
         end
     end
 end
+
+%hough transform to get centre values
+[centersBright, radiiBright] = imfindcircles(BW3,[9 17],'ObjectPolarity','bright');
 
 
 
