@@ -19,5 +19,14 @@ This is an approach to get a count of unused tablets from a tablet strip. It giv
 - Find the centre location of the used tablet.
 The flow and implementation can be found in `tabletsCount\tablets.m`
 
+## Counting the number squares of each color size wise
+This is an approach to get a count of squares. It gives an approach to following two questions:
+- Count the number of white squares size wise.
+- Count the number of gray squares size wise.
+The flow and implementation can be found in `squaresCount\squares.m`
+
+
+
+
 ## Built With
 - Matlab(R2015a RELEASE)
