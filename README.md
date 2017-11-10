@@ -22,11 +22,14 @@ The flow and implementation can be found in `tabletsCount\tablets.m`
 ## Counting the number squares of each color size wise
 This is an approach to get a count of squares. It gives an approach to following two questions:
 - Count the number of white squares size wise.
+
+## Counting the number staples
+This is an approach to get a count of staples. It gives an approach to following question:
+- Count the number of white squares size wise.
 - Count the number of gray squares size wise.
-The flow and implementation can be found in `squaresCount\squares.m`
+The flow and implementation can be found in `staplesCount\staples.m`
 
-
-
+### Note: A lot of other approaches do exist such as K-Means to solve above problems, but emphasis is on morphological operators, so you can use other algorithms aswell and try optimizing approaches further.
 
 ## Built With
 - Matlab(R2015a RELEASE)
